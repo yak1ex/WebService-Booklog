@@ -1,0 +1,4 @@
+.build/
+WebService-Booklog-*.tar.gz
+WebService-Booklog-*/
+*.BAK
