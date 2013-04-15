@@ -184,3 +184,76 @@ booklist[]=numeric_id&booklist[]=numeric_id&...
       "nextpage":2}
      }
 }
+
+=head1 SYNOPSIS
+
+  my $obj = WebService::Booklog->new;
+  my $dat = $obj->get_minishelf_data('yak1ex', status => 'read', rank => 5);
+  print Data::Dumper->Dump([$dat]);
+
+=head1 DESCRIPTION
+
+This module provides a way to access B<UNOFFICIAL> L<booklog|http://booklog.jp> API.
+They are not only B<UNOFFICIAL> but also B<UNDOCUMENTED>.
+Thus, it is expected to be quite B<UNSTABLE>. Please use with care.
+
+=method C<new>
+
+Constructor. There is no argument.
+
+=method C<get_minishelf_data($account, %params)>
+
+C<$account> is a target account name.
+Available keys for C<%params> are as follows:
+
+=for :list
+= C<category>
+Category ID dependent on user configuration.
+= C<status>
+One of C<'want_read'>, C<'reading'>, C<'read'> and C<'stacked'>. I believe the meanings are intuitive.
+= C<rank>
+An integer from 1 to 5 inclusive.
+= C<count>
+The number of items. Defaults to 5.
+
+Results are an object like the followings:
+
+  {
+    tana => {
+      account => $account,
+      image_url => $image_url,
+      id => $id,
+      name => $name,
+    },
+    category => {
+      id => $id,
+      name => $name,
+    },
+    books => [
+      {
+        title => $title,
+        asin => $asin,
+        author => $author,
+        url => $url,
+        image => $image,
+        width => $width,
+        height => $height,
+        catalog => $catalog,
+        id => $id,
+      },
+    ]
+  }
+
+From the API, C<[]>, empty array ref, denotes empty data.
+However, it is replaced as C<{}>, empty hash ref, by this interface.
+
+This interface is not documented but it is used by a public minishelf widget.
+Thus, it is expected to be a bit stabler than others.
+However, it is unofficial, too.
+
+=head1 SEE ALSO
+
+=for :list
+* L<http://backyard.chocolateboard.net/201204/booklog-jquery> An article for minishelf API
+
+=cut
