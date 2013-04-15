@@ -3,47 +3,46 @@ package WebService::Booklog;
 use strict;
 use warnings;
 
+# ABSTRACT: Access to unofficial API of booklog.jp
 # VERSION
+
+use LWP::UserAgent;
+use JSON::Any;
+
+sub new
+{
+	my ($self) = @_;
+	my $class = ref $self || $self;
+	return bless {
+		_UA => LWP::UserAgent->new,
+	}, $class;
+}
+
+my %status = (
+	want_read => 1,
+	reading => 2,
+	read => 3,
+	stacked => 4,
+);
+
+sub get_minishelf_data
+{
+	my ($self, $account, %arg) = @_;
+	my $data = {};
+	$data->{status} = $status{lc $arg{status}} if exists $arg{status};
+	foreach my $key (qw(category rank count)) {
+		$data->{$key} = $arg{$key} if exists $arg{$key};
+	}
+	my $param = join '&', map { $_.'='.$data->{$_} } keys %$data;
+	$param = "?$param" if length $param;
+	my $ret = JSON::Any->from_json($self->{_UA}->post('http://api.booklog.jp/json/'.$account.$param)->content);
+	$ret->{category} = {} if ref $ret->{category} eq 'ARRAY';
+	$ret->{books} = [ grep { ref $_ ne 'ARRAY' } @{$ret->{books}} ];
+	return $ret;
+}
 
 1;
 __END__
-
-ref: http://backyard.chocolateboard.net/201204/booklog-jquery
-
-http://api.booklog.jp/json/account
-
-  omitted for no limitation
-  category: all => 0
-  status: all => 0, want_read => 1, reading => 2, read => 3, stacked => 4
-  rank: all => 0, 1-5
-  count: number of items
-
-  {
-    tana => {
-      account => $account,
-      image_url => $image_url,
-      id => $id,
-      name => $name,
-    },
-    category => {
-      id => $id,
-      name => $name,
-    },
-    books => [
-      {
-        title => $title,
-        asin => $asin,
-        author => $author,
-        url => $url,
-        image => $image,
-        width => $width,
-        height => $height,
-        catalog => $catalog,
-        id => $id,
-      },
-    ]
-  }
-
 
 http://booklog.jp/sort
 
