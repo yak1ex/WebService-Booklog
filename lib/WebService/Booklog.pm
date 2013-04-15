@@ -81,14 +81,30 @@ booklist[]=numeric_id&booklist[]=numeric_id&...
                 params = {
                     'category_id': category_id,
                     'status': status,
-                    'sort': sort,
+                    'sort': sort, // (release|date|read|title)_(desc|asc)
                     'rank': rank,
                     'tag': tag,
                     'page': page,
-                    'genre': genre,
+                    'genre': genre, // 1 => book, 3 => comic, 4 => fbook, 6 => movie, 5 => magazine, 2 => ebook, 7 => music, 8 => game, 0 => other
                     'parpage': parpage
                 },
                 result, i, max, user, login, books, reviews;
+
+<select name="service_id" class="service_id inputSelect">
+    <option value="1" selected="selected">Amazon.co.jp</option>
+    <option value="2">Amazon.com</option>
+    <option value="3">パブー</option>
+    <option value="4">iTunes Store</option>
+    <option value="7">青空文庫</option>
+    <option value="8">BookLive!</option>
+    <option value="9">GALAPAGOS</option>
+    <option value="10">達人出版会</option>
+    <option value="11">O'Reilly Japan</option>
+    <option value="13">技術評論社</option>
+    <option value="15">パブリ</option>
+    <option value="16">honto</option>
+    <option value="17">BOOK☆WALKER</option>
+    <option value="19">ニコニコ静画</option>
 
 /users_api/<account>
 {"user":
@@ -167,7 +183,7 @@ booklist[]=numeric_id&booklist[]=numeric_id&...
      "quotes":[]
   },
  ],
- "reviews":false,
+ "reviews":false, // { "<id>":{"more":true,"public":"1","description":""}, ... }
  "comments":[],
  "pager":
      {"base_url":"<url>",
@@ -184,6 +200,48 @@ booklist[]=numeric_id&booklist[]=numeric_id&...
       "nextpage":2}
      }
 }
+
+  <form action="/edit/1/4864683212" method="post">
+  <input type="hidden" name="_method" value="edit" />
+	<select name="status" class="inputselect" onChange="setReadAt(this.selectedIndex)" >
+            <select name="read_at_y" id="read_at_y">
+                            <option value="3" selected="selected">3</option>
+            <select name="read_at_m" id="read_at_m">
+              <option value="0">なし</option>
+            <select name="read_at_d" id="read_at_d">
+                            <option value="12" selected="selected">12</option>
+          <input id="read_at_null" type="checkbox" name="read_at_null" value="0" onClick="changeReadAt(this)" />
+        <span>読了日を指定しない</span>
+	<select name="rank" class="inputselect">
+	<select id="category_edit" name="category_id" class="inputselect">
+      <textarea id="review" name="description" class="inputarea" style="height:180px;">
+<input type="checkbox" id="public" name="public" value="2" /><label for="public">ネタバレの内容を含む</label>
+      <input type="text" id="tags" name="tags" value="" class="inputtext" />    
+    <input type="text" id="create_on_y" name="create_on_y" value="2013" maxlength="4" class="inputtext" style="width:40px;" />年
+    <input type="text" id="create_on_m" name="create_on_m" value="03" maxlength="2" class="inputtext" style="width:20px;" />月
+    <input type="text" id="create_on_d" name="create_on_d" value="12" maxlength="2" class="inputtext" style="width:20px;" />日
+    &nbsp;
+    <input type="text" id="create_on_h" name="create_on_h" value="22" maxlength="2" class="inputtext" style="width:20px;" />時
+    <input type="text" id="create_on_i" name="create_on_i" value="49" maxlength="2" class="inputtext" style="width:20px;" />分
+    <input type="text" id="create_on_s" name="create_on_s" value="17" maxlength="2" class="inputtext" style="width:20px;" />秒
+  <textarea id="memo" name="memo" class="inputarea" style="height:50px;"></textarea>    
+
+  <form action="/edit/1/4864683212#select_tab2" method="post" id="form_quote">
+  <input type="hidden" name="_method" value="quote" />
+	<textarea id="quote" name="description" id="form_quote_description" class="inputarea" style="height:50px;"></textarea>
+	<input type="text" id="form_quote_page" name="page" value="" style="width:50px;" />
+
+  <form action="/edit/1/4864683212#select_tab3" method="post" id="form_reread">
+  <input type="hidden" name="_method" value="reread" />
+  <input type="hidden" name="book_id" value="63318780" />
+	<select name="read_at_y">
+	<select name="read_at_m">
+	<select name="read_at_d">
+	<select name="rank" class="inputselect">
+	<textarea id="review" name="comment" class="inputarea" style="height:80px;"></textarea>    
+
+  <form action="/edit/1/4864683212" method="post">
+  <input type="hidden" name="_method" value="delete" />
 
 =head1 SYNOPSIS
 
