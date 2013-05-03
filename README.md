@@ -4,7 +4,7 @@ WebService::Booklog - Access to unofficial API of booklog.jp
 
 # VERSION
 
-version v0.0.0
+version v0.0.1
 
 # SYNOPSIS
 
