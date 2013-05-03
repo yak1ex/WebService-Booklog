@@ -25,7 +25,7 @@ my %status = (
 	stacked => 4,
 );
 
-sub get_minishelf_data
+sub get_minishelf
 {
 	my ($self, $account, %arg) = @_;
 	my $data = {};
@@ -159,7 +159,7 @@ __END__
 =head1 SYNOPSIS
 
   my $obj = WebService::Booklog->new;
-  my $dat = $obj->get_minishelf_data('yak1ex', status => 'read', rank => 5);
+  my $dat = $obj->get_minishelf('yak1ex', status => 'read', rank => 5);
   print Data::Dumper->Dump([$dat]);
 
 =head1 DESCRIPTION
@@ -172,7 +172,7 @@ Thus, it is expected to be quite B<UNSTABLE>. Please use with care.
 
 Constructor. There is no argument.
 
-=method C<get_minishelf_data($account, %params)>
+=method C<get_minishelf($account, %params)>
 
 C<$account> is a target account name.
 Available keys for C<%params> are as follows:
