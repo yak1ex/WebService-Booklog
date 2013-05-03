@@ -63,73 +63,98 @@ sub get_shelf
 	my $ret = JSON::Any->from_json($self->{_UA}->get('http://booklog.jp/users_api/'.$account.$param)->content);
 }
 
+# Followings are not yet tested
+sub _login
+{
+	my ($self, $account, $password) = @_;
+	my $ret = $self->{_UA}->post('https://booklog.jp/login', { account => $account, password => $password });
+}
+
+sub _logout
+{
+	my ($self) = @_;
+	my $ret = $self->{_UA}->get('http://booklog.jp/logout');
+}
+
+sub _add_fav
+{
+	my ($self, $book_id) = @_;
+	$self->{_UA}->post('http://booklog.jp/api/review/fav', { book_id => $book_id });
+}
+
+sub _del_fav
+{
+	my ($self, $book_id) = @_;
+	$self->{_UA}->post('http://booklog.jp/api/review/fav', { book_id => $book_id, _method => 'delete' });
+}
+
+sub _add_follow
+{
+	my ($self, $account) = @_;
+	$self->{_UA}->post('http://booklog.jp/api/follow/add', { account => $account });
+}
+
+# status
+# read_at_[ymd] (w/o 0 pad) / read_at_null
+# rank
+# category_id
+# description
+# public (2: revealer)
+# tags
+# create_on_[ymdhis] (w/ 0 pad)
+# memo
+sub _edit_review
+{
+	my ($self, $service, $id, $args) = @_;
+	$args ||= {};
+	$args->{_method} = 'edit';
+	$self->{_UA}->post("http://booklog.jp/edit/$service/$id", $args);
+}
+
+# description
+# page
+sub _edit_quote
+{
+	my ($self, $service, $id, $args) = @_;
+	$args ||= {};
+	$args->{_method} = 'quote';
+	$self->{_UA}->post("http://booklog.jp/edit/$service/$id#select_tab2", $args);
+}
+
+# read_at_[ymd] (w/o 0 pad)
+# rank
+# comment
+sub _edit_reread
+{
+	my ($self, $service, $id, $book_id, $args) = @_;
+	$args ||= {};
+	$args->{_method} = 'reread';
+	$args->{book_id} = $book_id;
+	$self->{_UA}->post("http://booklog.jp/edit/$service/$id#select_tab2", $args);
+}
+
+sub _delete_item
+{
+	my ($self, $service, $id) = @_;
+	my $args = { _method => 'delete' };
+	$self->{_UA}->post("http://booklog.jp/edit/$service/$id#select_tab2", $args);
+}
+
+sub _sort_all
+{
+	my ($self, @book_id) = @_;
+	my $arg = [map { ('booklist[]', $_) } @book_id];
+	$self->{_UA}->post("http://booklog.jp/sort", $arg);
+}
+
+sub _set_sort
+{
+	my ($self, $book_id, $sort) = @_;
+	$self->{_UA}->post('http://booklog.jp/sort_edit', { book_id => $book_id, 'sort' => $sort });
+}
+
 1;
 __END__
-
-http://booklog.jp/sort
-
-booklist[]=numeric_id&booklist[]=numeric_id&...
-
-    var url ='/sort_edit';
-    var data = 'book_id=' + id + '&sort=' + sort;
-
-    var url ='/api/review/fav';
-    var params = 'book_id=' + book_id;
-    var action = 'add';
-
-    var fav_btn  = $('review_' + book_id + '_fav_btn');
-
-    if (fav_btn.hasClassName('fav_delete')) {
-        action = 'delete';
-        params += '&_method=delete';
-    }
-
-    var url ='/api/follow/add';
-    var data = 'account=' + account;
-
-/users_api/<account>
-
-  <form action="/edit/1/4864683212" method="post">
-  <input type="hidden" name="_method" value="edit" />
-	<select name="status" class="inputselect" onChange="setReadAt(this.selectedIndex)" >
-            <select name="read_at_y" id="read_at_y">
-                            <option value="3" selected="selected">3</option>
-            <select name="read_at_m" id="read_at_m">
-              <option value="0">なし</option>
-            <select name="read_at_d" id="read_at_d">
-                            <option value="12" selected="selected">12</option>
-          <input id="read_at_null" type="checkbox" name="read_at_null" value="0" onClick="changeReadAt(this)" />
-        <span>読了日を指定しない</span>
-	<select name="rank" class="inputselect">
-	<select id="category_edit" name="category_id" class="inputselect">
-      <textarea id="review" name="description" class="inputarea" style="height:180px;">
-<input type="checkbox" id="public" name="public" value="2" /><label for="public">ネタバレの内容を含む</label>
-      <input type="text" id="tags" name="tags" value="" class="inputtext" />    
-    <input type="text" id="create_on_y" name="create_on_y" value="2013" maxlength="4" class="inputtext" style="width:40px;" />年
-    <input type="text" id="create_on_m" name="create_on_m" value="03" maxlength="2" class="inputtext" style="width:20px;" />月
-    <input type="text" id="create_on_d" name="create_on_d" value="12" maxlength="2" class="inputtext" style="width:20px;" />日
-    &nbsp;
-    <input type="text" id="create_on_h" name="create_on_h" value="22" maxlength="2" class="inputtext" style="width:20px;" />時
-    <input type="text" id="create_on_i" name="create_on_i" value="49" maxlength="2" class="inputtext" style="width:20px;" />分
-    <input type="text" id="create_on_s" name="create_on_s" value="17" maxlength="2" class="inputtext" style="width:20px;" />秒
-  <textarea id="memo" name="memo" class="inputarea" style="height:50px;"></textarea>    
-
-  <form action="/edit/1/4864683212#select_tab2" method="post" id="form_quote">
-  <input type="hidden" name="_method" value="quote" />
-	<textarea id="quote" name="description" id="form_quote_description" class="inputarea" style="height:50px;"></textarea>
-	<input type="text" id="form_quote_page" name="page" value="" style="width:50px;" />
-
-  <form action="/edit/1/4864683212#select_tab3" method="post" id="form_reread">
-  <input type="hidden" name="_method" value="reread" />
-  <input type="hidden" name="book_id" value="63318780" />
-	<select name="read_at_y">
-	<select name="read_at_m">
-	<select name="read_at_d">
-	<select name="rank" class="inputselect">
-	<textarea id="review" name="comment" class="inputarea" style="height:80px;"></textarea>    
-
-  <form action="/edit/1/4864683212" method="post">
-  <input type="hidden" name="_method" value="delete" />
 
 =head1 SYNOPSIS
 
