@@ -25,6 +25,3 @@ is($dat->{category}{name}, '技術書', 'category name');
 is($dat->{category}{id}, 2275669, 'category ID');
 cmp_ok(@{$dat->{books}}, '>', 0, 'books');
 isnt((grep { $id{$_} } map { $_->{id} } @{$dat->{books}}), 5, 'difference check');
-
-use Data::Dumper;
-print Data::Dumper->Dump([$dat]);
