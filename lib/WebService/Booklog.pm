@@ -60,7 +60,7 @@ sub get_shelf
 		$data->{$key} = $arg{$key} if exists $arg{$key};
 	}
 	my $param = join '&', map { $_.'='.$data->{$_} } keys %$data;
-	my $ret = JSON::Any->from_json($self->{_UA}->get('http://booklog.jp/users_api/'.$account.$param)->content);
+	my $ret = JSON::Any->from_json($self->{_UA}->get('http://booklog.jp/users_api/'.$account.'?'.$param)->content);
 }
 
 # Followings are not yet tested
