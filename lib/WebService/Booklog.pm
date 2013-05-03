@@ -161,6 +161,12 @@ __END__
   my $obj = WebService::Booklog->new;
   my $dat = $obj->get_minishelf('yak1ex', status => 'read', rank => 5);
   print Data::Dumper->Dump([$dat]);
+  
+  $dat = $obj->get_review(60694202);
+  print $dat,"\n"; # Just a string
+  
+  $dat = $obj->get_shelf('yak1ex', status => 'read', rank => 5);
+  print Data::Dumper->Dump([$dat]);
 
 =head1 DESCRIPTION
 
@@ -215,16 +221,17 @@ Results are represented as an object like the followings:
     ]
   }
 
-From the API, C<[]>, empty array ref, denotes empty data.
-However, it is replaced as C<{}>, empty hash ref, by this interface.
+From the raw API, C<[]>, empty array ref, is used for empty data.
+However, it is replaced as C<{}>, empty hash ref, by this method.
 
-This interface is not documented but it is used by a public minishelf widget.
+This interface is NOT documented but it is used by a public minishelf widget.
 Thus, it is expected to be a bit stabler than others.
 However, it is unofficial, too.
 
 =method C<get_review($book_id)>
 
 Get the review content of the specified C<$book_id>. C<$book_id> can be get by other interfaces.
+Just a scalar string is returned.
 
 =method C<get_shelf($account, %arg)>
 
@@ -238,7 +245,7 @@ One of C<'want_read'>, C<'reading'>, C<'read'> and C<'stacked'>. I believe the m
 = C<rank>
 An integer from 1 to 5 inclusive.
 = C<sort>
-A string matching C<(release|date|read|title)_(desc|asc)>. C<date> means register date.
+A string matching C<(release|date|read|title|sort)_(desc|asc)>. C<date> means register date.
 = C<tag>
 Tag string
 = C<keyword>

@@ -9,7 +9,15 @@ version v0.0.0
 # SYNOPSIS
 
     my $obj = WebService::Booklog->new;
-    my $dat = $obj->get_minishelf_data('yak1ex', status => 'read', rank => 5);
+    my $dat = $obj->get_minishelf('yak1ex', status => 'read', rank => 5);
+    print Data::Dumper->Dump([$dat]);
+    
+
+    $dat = $obj->get_review(60694202);
+    print $dat,"\n"; # Just a string
+    
+
+    $dat = $obj->get_shelf('yak1ex', status => 'read', rank => 5);
     print Data::Dumper->Dump([$dat]);
 
 # DESCRIPTION
@@ -24,7 +32,7 @@ Thus, it is expected to be quite __UNSTABLE__. Please use with care.
 
 Constructor. There is no argument.
 
-## `get_minishelf_data($account, %params)`
+## `get_minishelf($account, %params)`
 
 `$account` is a target account name.
 Available keys for `%params` are as follows:
@@ -73,16 +81,17 @@ Results are represented as an object like the followings:
       ]
     }
 
-From the API, `[]`, empty array ref, denotes empty data.
-However, it is replaced as `{}`, empty hash ref, by this interface.
+From the raw API, `[]`, empty array ref, is used for empty data.
+However, it is replaced as `{}`, empty hash ref, by this method.
 
-This interface is not documented but it is used by a public minishelf widget.
+This interface is NOT documented but it is used by a public minishelf widget.
 Thus, it is expected to be a bit stabler than others.
 However, it is unofficial, too.
 
 ## `get_review($book_id)`
 
 Get the review content of the specified `$book_id`. `$book_id` can be get by other interfaces.
+Just a scalar string is returned.
 
 ## `get_shelf($account, %arg)`
 
@@ -102,7 +111,7 @@ Get shelf data of the specified $<$account>. Parameters are as follows:
 
 - `sort`
 
-    A string matching `(release|date|read|title)_(desc|asc)`. `date` means register date.
+    A string matching `(release|date|read|title|sort)_(desc|asc)`. `date` means register date.
 
 - `tag`
 
