@@ -232,77 +232,24 @@ Results are represented as an object like the followings:
 Probably, structure of `$result->{books}[n]{item}` depends on serivice provider.
 I did not and will not investigate them deeply. If you have some information, please let me know.
 
-- 1
-
-    Amazon.co.jp
-
-- 2
-
-    Amazon.com
-
-- 3
-
-    パブー
-
-- 4
-
-    iTunes Store
-
-- 5
-
-    unknown
-
-- 6
-
-    unknown
-
-- 7
-
-    青空文庫
-
-- 8
-
-    BookLive!
-
-- 9
-
-    GALAPAGOS
-
-- 10
-
-    達人出版会
-
-- 11
-
-    O'Reilly Japan
-
-- 12
-
-    unknown
-
-- 13
-
-    技術評論社
-
-- 14
-
-    unknown
-
-- 15
-
-    パブリ
-
-- 16
-
-    honto
-
-- 17
-
-    BOOK☆WALKER
-
-- 18
-
-    ニコニコ静画
+1. Amazon.co.jp
+2. Amazon.com
+3. パブー
+4. iTunes Store
+5. unknown
+6. unknown
+7. 青空文庫
+8. BookLive!
+9. GALAPAGOS
+10. 達人出版会
+11. O'Reilly Japan
+12. unknown
+13. 技術評論社
+14. unknown
+15. パブリ
+16. honto
+17. BOOK☆WALKER
+18. ニコニコ静画
 
 # SEE ALSO
 
